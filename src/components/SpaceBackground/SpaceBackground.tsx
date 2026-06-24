@@ -33,7 +33,7 @@ const FLAKE_COUNT = 22;
 function buildFlakes() {
   let s = 9301;
   const rnd = () => {
-    s = (s * 233280 + 49297) % 233280;
+    s = (s * 9301 + 49297) % 233280;
     return s / 233280;
   };
   return Array.from({ length: FLAKE_COUNT }, () => {
