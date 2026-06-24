@@ -1,0 +1,53 @@
+.card {
+  position: relative;
+  height: 168px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  background: var(--bg-1);
+  padding: var(--s-5);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  text-align: left;
+  color: var(--text);
+  transition: transform 0.18s ease, border-color 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-3px);
+  border-color: var(--line-strong);
+}
+
+/* The quiet signature-colour hint, fed by --accent on the card. */
+.accent {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    120px 120px at 86% 14%,
+    color-mix(in srgb, var(--accent) 32%, transparent),
+    transparent 70%
+  );
+  transition: opacity 0.2s ease;
+  opacity: 0.9;
+}
+.card:hover .accent {
+  opacity: 1;
+}
+
+.body {
+  position: relative;
+}
+
+.name {
+  display: block;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.meta {
+  display: block;
+  margin-top: var(--s-2);
+  font-size: 0.72rem;
+  color: var(--text-faint);
+}

@@ -1,0 +1,188 @@
+.page {
+  min-height: 100%;
+}
+
+/* ---- Hero ---- */
+.hero {
+  position: relative;
+  text-align: center;
+  padding: var(--s-8) var(--s-5);
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.glow {
+  position: absolute;
+  top: -90px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(560px, 92vw);
+  height: 380px;
+  background: radial-gradient(
+    circle at center,
+    rgba(0, 224, 255, 0.16),
+    rgba(123, 92, 255, 0.12) 44%,
+    transparent 72%
+  );
+  z-index: -1;
+  pointer-events: none;
+}
+
+.greet {
+  font-size: clamp(1.7rem, 4vw, 2rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.sub {
+  margin-top: var(--s-3);
+  font-size: 1rem;
+  color: var(--text-dim);
+}
+
+/* ---- Content column ---- */
+.content {
+  width: 100%;
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: 0 var(--s-6) var(--s-9);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-8);
+}
+
+.block {
+  display: flex;
+  flex-direction: column;
+}
+
+.head {
+  display: flex;
+  align-items: baseline;
+  margin-bottom: var(--s-5);
+}
+
+.title {
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+
+.viewAll {
+  margin-left: auto;
+  background: transparent;
+  border: none;
+  font-size: 13px;
+  color: var(--text-dim);
+  transition: color 0.15s ease;
+}
+.viewAll:hover {
+  color: var(--text);
+}
+
+/* ---- Solution Spaces ---- */
+.spaces {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--s-5);
+}
+
+/* ---- New Demos ---- */
+.demos {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--s-5);
+}
+
+.demo {
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  background: var(--bg-1);
+  padding: var(--s-5);
+  transition: border-color 0.2s ease;
+}
+.demo:hover {
+  border-color: var(--line-strong);
+}
+
+.newTag {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  color: var(--teal);
+}
+
+.demoTitle {
+  margin-top: var(--s-3);
+  font-size: 0.92rem;
+  font-weight: 600;
+}
+
+.demoSpace {
+  display: block;
+  margin-top: var(--s-1);
+  font-size: 0.76rem;
+  color: var(--text-faint);
+}
+
+/* ---- My Spaces strip ---- */
+.mySpaces {
+  display: flex;
+  align-items: center;
+  gap: var(--s-5);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  background: var(--bg-1);
+  padding: var(--s-4) var(--s-5);
+}
+
+.msLabel {
+  font-size: 0.92rem;
+  font-weight: 600;
+}
+
+.msItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 0.8rem;
+  color: var(--text-dim);
+}
+
+.live {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--teal);
+}
+
+.msNew {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: transparent;
+  border: none;
+  font-size: 0.8rem;
+  color: var(--violet);
+}
+
+@media (max-width: 900px) {
+  .spaces,
+  .demos {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 560px) {
+  .spaces,
+  .demos {
+    grid-template-columns: 1fr;
+  }
+  .mySpaces {
+    flex-wrap: wrap;
+    gap: var(--s-3);
+  }
+  .msNew {
+    margin-left: 0;
+  }
+}

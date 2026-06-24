@@ -1,0 +1,108 @@
+.root {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* Distinct, hue-driven field: two accent glows at the variant positions over a
+   diagonal base. */
+.field {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(
+      46% 42% at var(--o1),
+      color-mix(in srgb, var(--accent) 58%, transparent),
+      transparent 60%
+    ),
+    radial-gradient(
+      44% 46% at var(--o2),
+      color-mix(in srgb, var(--accent2) 48%, transparent),
+      transparent 62%
+    ),
+    linear-gradient(var(--angle), #0a0e1a, #06080f 64%);
+}
+
+/* A single slow-drifting orb adds life without distraction. */
+.drift {
+  position: absolute;
+  top: -10%;
+  right: -8%;
+  width: 52vw;
+  height: 52vw;
+  max-width: 760px;
+  max-height: 760px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    color-mix(in srgb, var(--accent) 52%, transparent),
+    transparent 64%
+  );
+  filter: blur(80px);
+  opacity: 0.55;
+  animation: drift 28s ease-in-out infinite alternate;
+}
+
+@keyframes drift {
+  from {
+    transform: translate(0, 0) scale(1);
+  }
+  to {
+    transform: translate(-7%, 9%) scale(1.14);
+  }
+}
+
+.grid {
+  position: absolute;
+  inset: 0;
+  background-image: linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-size: 64px 64px;
+  -webkit-mask-image: radial-gradient(circle at 50% 18%, #000, transparent 78%);
+  mask-image: radial-gradient(circle at 50% 18%, #000, transparent 78%);
+  opacity: 0.4;
+}
+
+/* Darken top (under the bar), keep the hero band vivid, fade to page bg below. */
+.scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(6, 8, 15, 0.42) 0%,
+    rgba(6, 8, 15, 0.1) 24%,
+    rgba(6, 8, 15, 0.5) 70%,
+    var(--bg) 100%
+  );
+}
+
+/* Very low-key snowfall drifting behind the content. */
+.snow {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.flake {
+  position: absolute;
+  top: -16px;
+  border-radius: 50%;
+  background: #ffffff;
+  filter: blur(0.5px);
+  will-change: transform;
+  animation-name: snowfall;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+@keyframes snowfall {
+  from {
+    transform: translate3d(0, -16px, 0);
+  }
+  to {
+    transform: translate3d(var(--drift, 0), 100vh, 0);
+  }
+}

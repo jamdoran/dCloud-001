@@ -1,0 +1,17 @@
+.logo {
+  display: block;
+  user-select: none;
+  /* Transparent-backed artwork: no glow filter, so the surround is purely the
+     page background (anything else reads as a halo/box that doesn't match). */
+}
+
+.spin {
+  transform-origin: 50% 50%;
+  animation: spin 60s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

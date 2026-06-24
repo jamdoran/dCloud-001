@@ -1,0 +1,68 @@
+/**
+ * Design tokens — the single source of truth for the dCloud visual system.
+ * North-star: Cisco Cloud Control — dark, spacious, gradient glow, pill chips,
+ * colourful viz on near-black. Every module should consume these variables
+ * rather than hard-coding colours, spacing or type.
+ */
+:root {
+  /* ---- Surfaces (near-black, layered) ---- */
+  --bg: #06080f;
+  --bg-1: #0a0e1a;
+  --bg-2: #0f1524;
+  --bg-elev: #131a2c;
+  --line: rgba(255, 255, 255, 0.08);
+  --line-strong: rgba(255, 255, 255, 0.16);
+
+  /* ---- Text ---- */
+  --text: #eef2fb;
+  --text-dim: #9aa6bf;
+  --text-faint: #5e6a85;
+
+  /* ---- Brand / accent glow ---- */
+  --cyan: #00e0ff;
+  --blue: #2e7bff;
+  --violet: #7b5cff;
+  --magenta: #d65cff;
+  --teal: #18e0c8;
+
+  /* Signature gradient — used for the spiral, CTAs and headline accents */
+  --grad-brand: linear-gradient(110deg, #00e0ff 0%, #2e7bff 45%, #7b5cff 100%);
+  --grad-brand-soft: linear-gradient(110deg, rgba(0, 224, 255, 0.16), rgba(123, 92, 255, 0.16));
+
+  /* ---- Pills / chips ---- */
+  --pill-bg: rgba(255, 255, 255, 0.05);
+  --pill-bg-hover: rgba(255, 255, 255, 0.1);
+  --pill-border: rgba(255, 255, 255, 0.12);
+
+  /* ---- Radii ---- */
+  --r-sm: 8px;
+  --r-md: 14px;
+  --r-lg: 22px;
+  --r-pill: 999px;
+
+  /* ---- Spacing scale ---- */
+  --s-1: 4px;
+  --s-2: 8px;
+  --s-3: 12px;
+  --s-4: 16px;
+  --s-5: 24px;
+  --s-6: 32px;
+  --s-7: 48px;
+  --s-8: 64px;
+  --s-9: 96px;
+  --s-10: 140px;
+
+  /* ---- Typography ---- */
+  --font-sans: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, Helvetica,
+    Arial, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+  /* ---- Elevation / glow ---- */
+  --shadow-soft: 0 20px 60px -20px rgba(0, 0, 0, 0.7);
+  --glow-cyan: 0 0 40px -6px rgba(0, 224, 255, 0.45);
+  --glow-violet: 0 0 40px -6px rgba(123, 92, 255, 0.45);
+
+  /* ---- Layout ---- */
+  --maxw: 1180px;
+  --topbar-h: 64px;
+}

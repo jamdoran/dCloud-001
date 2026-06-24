@@ -1,0 +1,68 @@
+---
+description: dCloud prototype — what it is, stack, conventions, domain model. Always-on project context.
+alwaysApply: true
+---
+
+# dCloud prototype
+
+A prototype reimagining of Cisco **dCloud** (Cisco's sales demonstration platform) — a "complete step-change", explicitly **not a reskin** of today's dCloud. The current dCloud is the **anti-pattern**: a flat, dense, text-heavy card-list / accordion-sidebar with poor raw search and no journey between demos. Diverge from it.
+
+## Source of truth
+
+`context.md` is the source of truth for *what* to build. When the brief and the code disagree, surface the conflict rather than silently picking one. This file distills the durable constraints plus the conventions established in code.
+
+## Commands
+
+```bash
+npm run dev        # Vite dev server on :5173
+npm run build      # tsc -b (typecheck) then vite build → dist/
+npm run typecheck  # tsc -b --noEmit, no build output
+npm run preview    # serve the production build
+```
+
+## Stack & conventions
+
+**React 19 + Vite 6 + TypeScript + React Router 7.**
+
+- **Styling: custom CSS + design tokens** (no CSS framework). All colours/spacing/type/radii live as CSS variables in `src/styles/tokens.css` — consume them, never hard-code. Component styles are **CSS Modules** (`Foo.module.css`) co-located with the component. Global resets and the `.gradient-text` helper are in `src/styles/global.css`.
+- **Imports** use the `@/` alias for `src/` (configured in `vite.config.ts` and `tsconfig.app.json`).
+- **Layout:** pages in `src/pages/<Name>/`, reusable components in `src/components/<Name>/`, non-UI logic in `src/lib/`, file-based seed data in `src/data/`.
+- **Auth/session** is centralised in `src/lib/auth.ts`: a simulated SSO that reads/writes the current `User` to `localStorage` under `dcloud.user`. `RequireAuth` (`src/components/RequireAuth.tsx`) gates every route except the public landing.
+
+## Hard constraints (do not violate)
+
+- **No backend.** Everything is client-side. Persist all state in **`localStorage`**.
+- **File-based test data.** Seed/demo content lives in files in the repo (`src/data/catalog.ts`), not a database or API.
+- **History and scoring are per-user** and must be obvious in the UI.
+
+## UX north-star
+
+**Modern, dark, spacious.** Visual reference is **Cisco Cloud Control** (dark, centred "Hi, <Name>", gradient glow, pill chips, colourful viz on dark). **Keep pages clean — do not pile many different things onto one page.**
+
+## Core domain model
+
+Strict connectivity hierarchy — content is organised around GTM, never as one flat list:
+
+```
+GTM Motions          (top level; editable)
+  Solution Spaces    (the marquee idea; each has a UNIQUE background)
+    Demos & Labs     (Solution · Deep-Dive · Guided · Lab)
+```
+
+- Everything connects **upstream**; a demo should **never be orphaned**.
+- Connections are **manual** (Admin UI later), not auto-derived from tags.
+
+## Terminology (revises context.md)
+
+- The UI uses **Solution Spaces**, *not* "Zones".
+- **My Spaces** = a seller's own custom, customer-scoped Spaces, built from Solution Spaces; publishable as a **dCloud eXpo** (branded, time-bound, shareable, joinable — concept from Cisco's real eXpo; do NOT copy the old eXpo UI).
+- **Gamification is deliberately very soft** — kept off the hub; full status ladder lives on the Profile page.
+
+## Build progress
+
+- ✅ Logged-out landing (`src/pages/Landing`) — public/SEO page, `SpiralLogo`, simulated Cisco SSO → `/home`.
+- ✅ Logged-in hub (`src/pages/Home/Home.tsx`) — `TopBar`, soft "Hi, <name>" hero, Solution Spaces grid (`SpaceCard`), flat New Demos, low-key My Spaces strip.
+- ✅ Solution Space pages (`src/pages/Space/Space.tsx`, `/spaces/:spaceId`) — distinct per-Space background (`SpaceBackground`), hero, journey strip, connected demos in one type-ordered grid (`DemoCard`), low-key snowfall.
+- ⬜ My Spaces builder + "Convert to eXpo" · Admin · ⌘K palette · Favourites · History · Scheduled · Profile/scoring.
+
+Note: inert placeholders exist (nav items, ⌘K, Favourites, "View all", demo "Open →", Space CTAs) pending their modules. The avatar currently signs out (temporary) until Profile is built.
