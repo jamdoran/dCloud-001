@@ -65,10 +65,8 @@ export function Landing() {
           Welcome to <span className="gradient-text">dCloud</span>
         </h1>
 
-        <p className={styles.lede}>
-          Every Cisco demo, connected and organised around the solutions you
-          sell. Find the right Solution Zone, walk your customer through a
-          guided story, then go as deep as the conversation needs.
+        <p className={styles.tagline}>
+          <span className="gradient-text">Proof</span> not Promises…
         </p>
       </section>
 

@@ -18,6 +18,13 @@
   background: rgba(255, 255, 255, 0.06);
 }
 
+.highlighted {
+  border-color: color-mix(in srgb, var(--type) 70%, var(--line-strong));
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--type) 35%, transparent),
+    0 0 32px -8px color-mix(in srgb, var(--type) 50%, transparent);
+}
+
 .tags {
   display: flex;
   align-items: center;
@@ -69,4 +76,68 @@
 }
 .card:hover .go {
   color: var(--text);
+}
+
+/* Full-width hero — the anchor Solution Demo per Space */
+.hero {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: end;
+  gap: var(--s-6);
+  padding: var(--s-6) var(--s-7);
+  border-color: color-mix(in srgb, var(--type) 35%, var(--line));
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--type) 10%, rgba(255, 255, 255, 0.04)),
+    rgba(255, 255, 255, 0.04)
+  );
+}
+
+.hero:hover {
+  border-color: color-mix(in srgb, var(--type) 60%, var(--line-strong));
+}
+
+.heroBody {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+  min-width: 0;
+}
+
+.hero .title {
+  font-size: clamp(1.2rem, 2.5vw, 1.5rem);
+  font-weight: 700;
+}
+
+.hero .desc {
+  font-size: 0.95rem;
+  max-width: 62ch;
+}
+
+.hero .foot {
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--s-2);
+  margin-top: 0;
+  white-space: nowrap;
+}
+
+.hero .go {
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+@media (max-width: 640px) {
+  .hero {
+    grid-template-columns: 1fr;
+    align-items: stretch;
+  }
+
+  .hero .foot {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: var(--s-2);
+  }
 }

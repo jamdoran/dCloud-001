@@ -39,10 +39,14 @@ export interface Demo {
   operationalType: OperationalType;
   description: string;
   durationMins: number;
-  /** Every demo belongs to a Solution Space — never orphaned. */
-  spaceId: string;
+  /** Solution Space(s) this demo belongs to — a product demo may span more than one. */
+  spaceIds: string[];
+  /** Product names and aliases used for search (e.g. "Catalyst 9300", "Splunk"). */
+  products: string[];
   /** ISO date, used to surface the newest. */
   addedAt: string;
+  /** When true, hidden on the hub until "View all" in New Demos. */
+  hubExtra?: boolean;
 }
 
 export type MySpaceStatus = "draft" | "expo-live";

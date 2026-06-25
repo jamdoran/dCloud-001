@@ -10,19 +10,32 @@ const TYPE_COLOR: Record<DemoType, string> = {
   Lab: "#ffb347",
 };
 
-export function DemoCard({ demo }: { demo: Demo }) {
+export function DemoCard({
+  demo,
+  highlighted = false,
+  variant = "default",
+}: {
+  demo: Demo;
+  highlighted?: boolean;
+  variant?: "default" | "hero";
+}) {
+  const isHero = variant === "hero";
+
   return (
     <button
       type="button"
-      className={styles.card}
+      id={`demo-${demo.id}`}
+      className={`${styles.card} ${isHero ? styles.hero : ""} ${highlighted ? styles.highlighted : ""}`}
       style={{ "--type": TYPE_COLOR[demo.type] } as CSSProperties}
     >
-      <div className={styles.tags}>
-        <span className={styles.type}>{demo.type}</span>
-        <span className={styles.op}>{demo.operationalType}</span>
+      <div className={isHero ? styles.heroBody : undefined}>
+        <div className={styles.tags}>
+          <span className={styles.type}>{demo.type}</span>
+          <span className={styles.op}>{demo.operationalType}</span>
+        </div>
+        <h4 className={styles.title}>{demo.title}</h4>
+        <p className={styles.desc}>{demo.description}</p>
       </div>
-      <h4 className={styles.title}>{demo.title}</h4>
-      <p className={styles.desc}>{demo.description}</p>
       <div className={styles.foot}>
         <span className={styles.duration}>{demo.durationMins} min</span>
         <span className={styles.go}>Open →</span>

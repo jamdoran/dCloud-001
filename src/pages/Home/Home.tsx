@@ -1,13 +1,18 @@
+import { useState } from "react";
+import type { CSSProperties } from "react";
 import { TopBar } from "@/components/TopBar/TopBar";
 import { SpaceCard } from "@/components/SpaceCard/SpaceCard";
 import { getUser } from "@/lib/auth";
 import {
+  hubNewDemos,
   mySpaces,
-  newestDemos,
+  primarySpaceId,
   solutionSpaces,
   spaceById,
 } from "@/data/catalog";
 import styles from "./Home.module.css";
+
+const HUB_SPACE_LIMIT = 6;
 
 /**
  * Logged-in hub. Calm and spacious per the Cloud Control north-star: a soft
@@ -17,7 +22,15 @@ import styles from "./Home.module.css";
 export function Home() {
   const user = getUser();
   const firstName = (user?.name ?? "there").split(" ")[0];
-  const latest = newestDemos(3);
+  const [showAllSpaces, setShowAllSpaces] = useState(false);
+  const [showAllDemos, setShowAllDemos] = useState(false);
+
+  const visibleSpaces = showAllSpaces
+    ? solutionSpaces
+    : solutionSpaces.slice(0, HUB_SPACE_LIMIT);
+  const hasMoreSpaces = solutionSpaces.length > HUB_SPACE_LIMIT;
+  const demos = hubNewDemos(showAllDemos);
+  const hasMoreDemos = hubNewDemos(true).length > hubNewDemos(false).length;
 
   return (
     <div className={styles.page}>
@@ -35,11 +48,19 @@ export function Home() {
         <section className={styles.block}>
           <div className={styles.head}>
             <h2 className={styles.title}>Solution Spaces</h2>
-            <button className={styles.viewAll}>View all</button>
+            {hasMoreSpaces && (
+              <button
+                type="button"
+                className={styles.viewAll}
+                onClick={() => setShowAllSpaces((v) => !v)}
+                aria-expanded={showAllSpaces}
+              >
+                {showAllSpaces ? "Show less" : "View all"}
+              </button>
+            )}
           </div>
           <div className={styles.spaces}>
-            {/* Hub shows the first six; the rest live behind "View all". */}
-            {solutionSpaces.slice(0, 6).map((space) => (
+            {visibleSpaces.map((space) => (
               <SpaceCard key={space.id} space={space} />
             ))}
           </div>
@@ -48,18 +69,40 @@ export function Home() {
         <section className={styles.block}>
           <div className={styles.head}>
             <h2 className={styles.title}>New Demos</h2>
-            <button className={styles.viewAll}>View all</button>
+            {hasMoreDemos && (
+              <button
+                type="button"
+                className={styles.viewAll}
+                onClick={() => setShowAllDemos((v) => !v)}
+                aria-expanded={showAllDemos}
+              >
+                {showAllDemos ? "Show less" : "View all"}
+              </button>
+            )}
           </div>
           <div className={styles.demos}>
-            {latest.map((demo) => (
-              <article key={demo.id} className={styles.demo}>
-                <span className={styles.newTag}>NEW</span>
-                <h3 className={styles.demoTitle}>{demo.title}</h3>
-                <span className={styles.demoSpace}>
-                  {spaceById(demo.spaceId)?.name}
-                </span>
-              </article>
-            ))}
+            {demos.map((demo) => {
+              const space = spaceById(primarySpaceId(demo));
+              return (
+                <article key={demo.id} className={styles.demo}>
+                  {space && (
+                    <div
+                      className={styles.demoVisual}
+                      style={
+                        {
+                          "--accent": space.accent,
+                          "--accent2": space.accent2,
+                        } as CSSProperties
+                      }
+                      aria-hidden="true"
+                    />
+                  )}
+                  <span className={styles.newTag}>NEW</span>
+                  <h3 className={styles.demoTitle}>{demo.title}</h3>
+                  <span className={styles.demoSpace}>{space?.name}</span>
+                </article>
+              );
+            })}
           </div>
         </section>
 
