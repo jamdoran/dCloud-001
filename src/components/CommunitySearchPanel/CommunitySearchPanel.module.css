@@ -1,0 +1,52 @@
+.hitList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.hitBtn {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  width: 100%;
+  padding: var(--s-3) var(--s-4);
+  text-align: left;
+  border: none;
+  border-radius: var(--r-sm);
+  background: transparent;
+  color: var(--text);
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.hitBtn:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.hitType {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--type);
+}
+
+.hitTitle {
+  font-size: 0.92rem;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.hitMeta {
+  font-size: 0.78rem;
+  color: var(--text-faint);
+}
+
+.hitMatch {
+  color: var(--text-dim);
+}
+
+.results {
+  max-height: min(420px, 50vh);
+}

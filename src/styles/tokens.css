@@ -24,6 +24,8 @@
   --violet: #7b5cff;
   --magenta: #d65cff;
   --teal: #18e0c8;
+  --gold: #f5c542;
+  --orange: #ffb347;
 
   /* Signature gradient — used for the spiral, CTAs and headline accents */
   --grad-brand: linear-gradient(110deg, #00e0ff 0%, #2e7bff 45%, #7b5cff 100%);
@@ -59,10 +61,18 @@
 
   /* ---- Elevation / glow ---- */
   --shadow-soft: 0 20px 60px -20px rgba(0, 0, 0, 0.7);
+  --shadow-card: 0 8px 28px -10px rgba(0, 0, 0, 0.55);
+  --shadow-card-hover: 0 16px 44px -14px rgba(0, 0, 0, 0.72);
   --glow-cyan: 0 0 40px -6px rgba(0, 224, 255, 0.45);
   --glow-violet: 0 0 40px -6px rgba(123, 92, 255, 0.45);
 
   /* ---- Layout ---- */
   --maxw: 1180px;
   --topbar-h: 64px;
+  /** Horizontal inset for edge-to-edge shells — scales with viewport width. */
+  --gutter: clamp(var(--s-4), 3.5vw, var(--s-8));
+  /** Hub/browse grids: minimum tile width before wrapping to fewer columns. */
+  --hub-card-min: 260px;
+  /** Gap between filter sidebar and main content on catalog-style pages. */
+  --catalog-layout-gap: clamp(var(--s-8), 5vw, var(--s-10));
 }

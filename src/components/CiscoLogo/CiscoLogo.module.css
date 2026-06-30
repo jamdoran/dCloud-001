@@ -1,0 +1,58 @@
+.wrap {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.svg {
+  display: block;
+  position: relative;
+  z-index: 1;
+}
+
+.bars {
+  filter: drop-shadow(0 0 12px rgba(0, 224, 255, 0.25));
+}
+
+.wash {
+  position: absolute;
+  inset: -30% -50%;
+  z-index: 2;
+  background: linear-gradient(
+    105deg,
+    transparent 38%,
+    rgba(255, 255, 255, 0.04) 46%,
+    rgba(0, 224, 255, 0.1) 50%,
+    rgba(123, 92, 255, 0.08) 54%,
+    transparent 62%
+  );
+  mix-blend-mode: screen;
+  pointer-events: none;
+  animation: washSweep 16s ease-in-out infinite;
+}
+
+@keyframes washSweep {
+  0% {
+    transform: translateX(-55%);
+    opacity: 0;
+  }
+  12% {
+    opacity: 1;
+  }
+  88% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(55%);
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wash {
+    animation: none;
+    opacity: 0;
+  }
+}

@@ -1,31 +1,31 @@
 .page {
+  position: relative;
   min-height: 100%;
+  isolation: isolate;
+}
+
+.pageGlow {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  width: min(640px, 85vw);
+  height: min(420px, 55vh);
+  pointer-events: none;
+  z-index: 0;
+  background: radial-gradient(
+    ellipse 90% 80% at 100% 100%,
+    rgba(123, 92, 255, 0.07),
+    rgba(0, 224, 255, 0.035) 42%,
+    transparent 68%
+  );
 }
 
 /* ---- Hero ---- */
 .hero {
   position: relative;
   text-align: center;
-  padding: var(--s-8) var(--s-5);
-  overflow: hidden;
-  isolation: isolate;
-}
-
-.glow {
-  position: absolute;
-  top: -90px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: min(560px, 92vw);
-  height: 380px;
-  background: radial-gradient(
-    circle at center,
-    rgba(0, 224, 255, 0.16),
-    rgba(123, 92, 255, 0.12) 44%,
-    transparent 72%
-  );
-  z-index: -1;
-  pointer-events: none;
+  padding: var(--s-8) var(--gutter);
+  z-index: 1;
 }
 
 .greet {
@@ -40,15 +40,26 @@
   color: var(--text-dim);
 }
 
-/* ---- Content column ---- */
-.content {
+/* ---- Hub search (same engine as ⌘K) ---- */
+.search {
   width: 100%;
-  max-width: var(--maxw);
-  margin: 1cm auto 0;
-  padding: 0 var(--s-6) var(--s-9);
+  max-width: min(880px, 100% - 2 * var(--gutter));
+  margin: var(--s-7) auto 0;
+  padding: 0 var(--gutter);
+  position: relative;
+  z-index: 2;
+}
+
+/* ---- Content — full width, fluid gutters ---- */
+.content {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  margin: var(--s-6) 0 0;
+  padding: 0 var(--gutter) var(--s-9);
   display: flex;
   flex-direction: column;
-  gap: var(--s-8);
+  gap: clamp(var(--s-6), 4vw, var(--s-8));
 }
 
 .block {
@@ -79,18 +90,12 @@
   color: var(--text);
 }
 
-/* ---- Solution Spaces ---- */
-.spaces {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: var(--s-5);
-}
-
-/* ---- New Demos ---- */
+/* ---- Solution Spaces & New Demos — column count follows viewport ---- */
+.spaces,
 .demos {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: var(--s-5);
+  grid-template-columns: repeat(auto-fill, minmax(var(--hub-card-min), 1fr));
+  gap: clamp(var(--s-4), 2vw, var(--s-5));
 }
 
 .demo {
@@ -100,14 +105,20 @@
   background: var(--bg-1);
   padding: var(--s-5);
   overflow: hidden;
-  transition: border-color 0.2s ease;
+  box-shadow: var(--shadow-card);
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.18s ease;
 }
 .demo:hover {
   border-color: var(--line-strong);
+  box-shadow: var(--shadow-card-hover);
+  transform: translateY(-3px);
 }
 
 .demoVisual {
-  height: 72px;
+  height: clamp(72px, 10vw, 96px);
   margin: calc(-1 * var(--s-5)) calc(-1 * var(--s-5)) var(--s-4);
   border-radius: var(--r-sm) var(--r-sm) 0 0;
   background:
@@ -144,65 +155,3 @@
   color: var(--text-faint);
 }
 
-/* ---- My Spaces strip ---- */
-.mySpaces {
-  display: flex;
-  align-items: center;
-  gap: var(--s-5);
-  border: 1px solid var(--line);
-  border-radius: var(--r-md);
-  background: var(--bg-1);
-  padding: var(--s-4) var(--s-5);
-}
-
-.msLabel {
-  font-size: 0.92rem;
-  font-weight: 600;
-}
-
-.msItem {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  font-size: 0.8rem;
-  color: var(--text-dim);
-}
-
-.live {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--teal);
-}
-
-.msNew {
-  margin-left: auto;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  background: transparent;
-  border: none;
-  font-size: 0.8rem;
-  color: var(--violet);
-}
-
-@media (max-width: 900px) {
-  .spaces,
-  .demos {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media (max-width: 560px) {
-  .spaces,
-  .demos {
-    grid-template-columns: 1fr;
-  }
-  .mySpaces {
-    flex-wrap: wrap;
-    gap: var(--s-3);
-  }
-  .msNew {
-    margin-left: 0;
-  }
-}

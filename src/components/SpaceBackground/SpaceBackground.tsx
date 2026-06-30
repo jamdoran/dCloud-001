@@ -7,18 +7,53 @@ import styles from "./SpaceBackground.module.css";
  * The unique, high-tech backdrop for a Solution Space — the marquee visual.
  * Each Space gets a distinct identity from its two accent colours plus a
  * geometry variant chosen deterministically from its id, so no two Spaces look
- * alike. A very low-key snowfall drifts behind the content, and a scrim keeps
- * foreground text legible.
+ * alike. A subtle accent-tinted mesh sits over the field, very low-key snowfall
+ * drifts behind the content, and a scrim keeps foreground text legible.
  */
 
 const VARIANTS = [
-  { o1: "8% 10%", o2: "84% 72%", angle: "155deg" },
-  { o1: "86% 6%", o2: "10% 80%", angle: "200deg" },
-  { o1: "78% 78%", o2: "6% 12%", angle: "128deg" },
-  { o1: "48% -8%", o2: "52% 96%", angle: "180deg" },
-  { o1: "-6% 42%", o2: "92% 58%", angle: "162deg" },
-  { o1: "90% 24%", o2: "18% 92%", angle: "208deg" },
-  { o1: "24% 90%", o2: "82% 6%", angle: "138deg" },
+  {
+    o1: "8% 10%",
+    o2: "84% 72%",
+    angle: "155deg",
+    mesh: ["22% 32%", "76% 14%", "58% 86%", "10% 68%"],
+  },
+  {
+    o1: "86% 6%",
+    o2: "10% 80%",
+    angle: "200deg",
+    mesh: ["68% 24%", "18% 58%", "88% 78%", "34% 12%"],
+  },
+  {
+    o1: "78% 78%",
+    o2: "6% 12%",
+    angle: "128deg",
+    mesh: ["82% 38%", "28% 82%", "12% 28%", "52% 48%"],
+  },
+  {
+    o1: "48% -8%",
+    o2: "52% 96%",
+    angle: "180deg",
+    mesh: ["44% 22%", "72% 62%", "26% 74%", "62% 38%"],
+  },
+  {
+    o1: "-6% 42%",
+    o2: "92% 58%",
+    angle: "162deg",
+    mesh: ["14% 18%", "64% 8%", "86% 52%", "38% 88%"],
+  },
+  {
+    o1: "90% 24%",
+    o2: "18% 92%",
+    angle: "208deg",
+    mesh: ["74% 66%", "20% 36%", "48% 12%", "8% 52%"],
+  },
+  {
+    o1: "24% 90%",
+    o2: "82% 6%",
+    angle: "138deg",
+    mesh: ["32% 64%", "92% 42%", "16% 22%", "56% 92%"],
+  },
 ];
 
 function variantFor(id: string) {
@@ -59,14 +94,19 @@ export function SpaceBackground({ space }: { space: SolutionSpace }) {
     "--o1": v.o1,
     "--o2": v.o2,
     "--angle": v.angle,
+    "--m1": v.mesh[0],
+    "--m2": v.mesh[1],
+    "--m3": v.mesh[2],
+    "--m4": v.mesh[3],
   } as CSSProperties;
 
   return (
     <div className={styles.root} style={style} aria-hidden="true">
       <div className={styles.field} />
       <div className={styles.drift} />
-      <div className={styles.grid} />
+      <div className={styles.meshGlow} />
       <div className={styles.scrim} />
+      <div className={styles.meshLines} />
       <div className={styles.snow}>
         {flakes.map((f, i) => (
           <span

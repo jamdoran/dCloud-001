@@ -1,0 +1,74 @@
+.wrap {
+  position: relative;
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  background: linear-gradient(180deg, var(--bg-2), var(--bg-1));
+  overflow: hidden;
+}
+
+.label {
+  position: absolute;
+  top: var(--s-3);
+  left: var(--s-4);
+  z-index: 1;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+
+.svg {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+}
+
+.bg {
+  fill: rgba(255, 255, 255, 0.02);
+}
+
+.link {
+  stroke: rgba(255, 255, 255, 0.12);
+  stroke-width: 0.35;
+}
+
+.linkActive {
+  stroke: url(#topo-grad-fallback);
+  stroke: color-mix(in srgb, var(--accent) 55%, transparent);
+  stroke-width: 0.45;
+  stroke-dasharray: 1.2 0.8;
+  animation: flow 3s linear infinite;
+}
+
+@keyframes flow {
+  to {
+    stroke-dashoffset: -4;
+  }
+}
+
+.nodeCore {
+  fill: url(#topo-grad-fallback);
+  fill: var(--accent);
+}
+
+.nodeEdge {
+  fill: color-mix(in srgb, var(--accent2) 80%, white);
+}
+
+.nodeEndpoint {
+  fill: rgba(255, 255, 255, 0.85);
+}
+
+.nodeLabel {
+  font-size: 2.8px;
+  font-family: var(--font-sans);
+  fill: var(--text-dim);
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .linkActive {
+    animation: none;
+  }
+}

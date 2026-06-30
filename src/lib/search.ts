@@ -6,7 +6,9 @@ import {
   solutionSpaces,
   spaceById,
 } from "@/data/catalog";
-import type { Demo, SolutionSpace } from "@/lib/types";
+import { demoArchitectures, type CiscoArchitectureId } from "@/lib/ciscoArchitectures";
+import { demoCategory, type DemoCategory } from "@/lib/demoLabels";
+import type { Demo, GtmMotionId, SolutionSpace } from "@/lib/types";
 
 export type DemoSearchMatchField =
   | "title"
@@ -40,6 +42,141 @@ export interface DemoSearchHit {
 export interface SearchResults {
   spaces: SpaceSearchHit[];
   demos: DemoSearchHit[];
+}
+
+export interface SearchFilters {
+  motions: GtmMotionId[];
+  spaceIds: string[];
+  demoCategories: DemoCategory[];
+  architectures: CiscoArchitectureId[];
+  /** When true, every selected value in a group must match (AND). When false, any (OR). */
+  matchAll: boolean;
+}
+
+export const DEMO_CATEGORY_FILTERS: DemoCategory[] = [
+  "Solution Demo",
+  "Guided Demo",
+  "Instant Demo",
+  "Lab",
+];
+
+export function emptySearchFilters(): SearchFilters {
+  return { motions: [], spaceIds: [], demoCategories: [], architectures: [], matchAll: false };
+}
+
+export function hasActiveSearchFilters(filters: SearchFilters): boolean {
+  return (
+    filters.motions.length > 0 ||
+    filters.spaceIds.length > 0 ||
+    filters.demoCategories.length > 0 ||
+    filters.architectures.length > 0
+  );
+}
+
+export function activeSearchFilterCount(filters: SearchFilters): number {
+  return (
+    filters.motions.length +
+    filters.spaceIds.length +
+    filters.demoCategories.length +
+    filters.architectures.length
+  );
+}
+
+function motionMatchesFilter(space: SolutionSpace, filters: SearchFilters): boolean {
+  if (filters.motions.length === 0) return true;
+  if (filters.matchAll) {
+    return filters.motions.every((m) => space.motions.includes(m));
+  }
+  return space.motions.some((m) => filters.motions.includes(m));
+}
+
+function spaceIdMatchesSpace(space: SolutionSpace, filters: SearchFilters): boolean {
+  if (filters.spaceIds.length === 0) return true;
+  if (filters.matchAll) {
+    return filters.spaceIds.length === 1 && filters.spaceIds.includes(space.id);
+  }
+  return filters.spaceIds.includes(space.id);
+}
+
+function spaceMatchesFilters(space: SolutionSpace, filters: SearchFilters): boolean {
+  return motionMatchesFilter(space, filters) && spaceIdMatchesSpace(space, filters);
+}
+
+function demoMatchesCategoryFilter(demo: Demo, filters: SearchFilters): boolean {
+  if (filters.demoCategories.length === 0) return true;
+  return demoCategory(demo) === filters.demoCategories[0];
+}
+
+function demoMatchesArchitectureFilter(demo: Demo, filters: SearchFilters): boolean {
+  if (filters.architectures.length === 0) return true;
+  const demoArchs = demoArchitectures(demo);
+  if (filters.matchAll) {
+    return filters.architectures.every((arch) => demoArchs.includes(arch));
+  }
+  return filters.architectures.some((arch) => demoArchs.includes(arch));
+}
+
+function demoMatchesSpaceFilter(demo: Demo, filters: SearchFilters): boolean {
+  if (filters.spaceIds.length === 0) return true;
+  if (filters.matchAll) {
+    return filters.spaceIds.every((id) => demo.spaceIds.includes(id));
+  }
+  return filters.spaceIds.some((id) => demo.spaceIds.includes(id));
+}
+
+function applySearchFilters(results: SearchResults, filters: SearchFilters): SearchResults {
+  if (!hasActiveSearchFilters(filters)) return results;
+
+  return {
+    spaces: results.spaces.filter((hit) => spaceMatchesFilters(hit.space, filters)),
+    demos: results.demos.filter(
+      (hit) =>
+        motionMatchesFilter(hit.space, filters) &&
+        demoMatchesCategoryFilter(hit.demo, filters) &&
+        demoMatchesArchitectureFilter(hit.demo, filters) &&
+        demoMatchesSpaceFilter(hit.demo, filters) &&
+        (!filters.matchAll || filters.spaceIds.length <= 1
+          ? spaceIdMatchesSpace(hit.space, filters)
+          : true),
+    ),
+  };
+}
+
+/** All spaces and demos matching filters (browse mode when the query is empty). */
+function browseCatalog(filters: SearchFilters): SearchResults {
+  const spaces: SpaceSearchHit[] = solutionSpaces
+    .filter((space) => spaceMatchesFilters(space, filters))
+    .map((space) => ({ space, matchReason: "space-name" as const }));
+
+  const hits: DemoSearchHit[] = [];
+  const seen = new Set<string>();
+
+  for (const demo of demos) {
+    if (!demoMatchesCategoryFilter(demo, filters)) continue;
+    if (!demoMatchesArchitectureFilter(demo, filters)) continue;
+    if (!demoMatchesSpaceFilter(demo, filters)) continue;
+
+    for (const spaceId of demo.spaceIds) {
+      const space = spaceById(spaceId);
+      if (!space || !motionMatchesFilter(space, filters)) continue;
+      if (!filters.matchAll && filters.spaceIds.length > 0 && !filters.spaceIds.includes(space.id)) {
+        continue;
+      }
+
+      const key = demoHitKey(demo.id, spaceId);
+      if (seen.has(key)) continue;
+      seen.add(key);
+
+      hits.push({
+        demo,
+        space,
+        matchFields: [],
+        fromSpaceMatch: true,
+      });
+    }
+  }
+
+  return { spaces, demos: hits };
 }
 
 function normalize(text: string): string {
@@ -223,18 +360,22 @@ function searchDemos(
 }
 
 /** Search Solution Spaces, GTM motions, and demos within the hierarchy. */
-export function search(query: string): SearchResults {
+export function search(
+  query: string,
+  filters: SearchFilters = emptySearchFilters(),
+): SearchResults {
   const queryTokens = tokens(query);
+
   if (queryTokens.length === 0) {
-    return { spaces: [], demos: [] };
+    return hasActiveSearchFilters(filters) ? browseCatalog(filters) : { spaces: [], demos: [] };
   }
 
   const impliedFamily = queryImpliedFamily(query);
   const spaces = searchSpaces(queryTokens);
   const matchedSpaceIds = new Set(spaces.map((h) => h.space.id));
-  const demos = searchDemos(queryTokens, matchedSpaceIds, impliedFamily);
+  const demoHits = searchDemos(queryTokens, matchedSpaceIds, impliedFamily);
 
-  return { spaces, demos };
+  return applySearchFilters({ spaces, demos: demoHits }, filters);
 }
 
 /** Venue label — product line beats GTM motion when the hit matched a product. */

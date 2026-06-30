@@ -43,19 +43,68 @@ export interface Demo {
   spaceIds: string[];
   /** Product names and aliases used for search (e.g. "Catalyst 9300", "Splunk"). */
   products: string[];
-  /** ISO date, used to surface the newest. */
+  /** ISO date — publication date shown on demo cards. */
   addedAt: string;
+  /** Optional legacy field; cards use addedAt as published date. */
+  updatedAt?: string;
   /** When true, hidden on the hub until "View all" in New Demos. */
   hubExtra?: boolean;
 }
 
-export type MySpaceStatus = "draft" | "expo-live";
-
-/** A seller's own custom Space, scoped to a customer; can be published as an eXpo. */
-export interface MySpace {
+/** Seller-contributed demo in the Community Content catalog — no Solution Space linkage. */
+export interface CommunityDemo {
   id: string;
-  customer: string;
-  /** The Solution Space this custom Space draws from. */
-  baseSpaceId: string;
-  status: MySpaceStatus;
+  title: string;
+  type: DemoType;
+  operationalType: OperationalType;
+  description: string;
+  durationMins: number;
+  products: string[];
+  /** ISO date — used for "New" highlights and sort order. */
+  addedAt: string;
+  updatedAt?: string;
+  /** Person or team who contributed the demo. */
+  contributor: string;
+  /** Topic / BE tags for browse filters (e.g. Security, Partner). */
+  topics: string[];
+  /** Optional peer rating seed for display. */
+  rating?: number;
+}
+
+export interface DemoScriptLink {
+  label: string;
+  href: string;
+  fileType?: string;
+}
+
+export interface DemoTagGroup {
+  category: string;
+  tags: string[];
+}
+
+/** Rich detail surfaced in the demo modal — seed defaults generated per demo. */
+export interface DemoDetail {
+  publishedAt: string;
+  scriptLinks: DemoScriptLink[];
+  categories: string[];
+  tagGroups: DemoTagGroup[];
+  launchCount: number;
+  avgRating: number;
+  feedbackCount: number;
+}
+
+export type SpaceAssetKind = "video" | "document";
+
+/** Supporting video or document linked from a Solution Space page. */
+export interface SpaceAsset {
+  id: string;
+  spaceId: string;
+  kind: SpaceAssetKind;
+  title: string;
+  description?: string;
+  href: string;
+  /** Shown on video cards (e.g. "4 min"). */
+  durationLabel?: string;
+  /** Shown on document cards (e.g. "PDF"). */
+  fileType?: string;
 }

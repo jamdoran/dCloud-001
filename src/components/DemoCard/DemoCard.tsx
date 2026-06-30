@@ -1,4 +1,8 @@
 import type { CSSProperties } from "react";
+import { FavouriteStar } from "@/components/FavouriteStar/FavouriteStar";
+import { demoCategory } from "@/lib/demoLabels";
+import { demoPublishedDate, formatPublishedDate } from "@/lib/demoFreshness";
+import { demoHasTrials } from "@/lib/demoTrials";
 import type { Demo, DemoType } from "@/lib/types";
 import styles from "./DemoCard.module.css";
 
@@ -14,32 +18,60 @@ export function DemoCard({
   demo,
   highlighted = false,
   variant = "default",
+  onOpen,
 }: {
   demo: Demo;
   highlighted?: boolean;
   variant?: "default" | "hero";
+  onOpen?: (demo: Demo) => void;
 }) {
   const isHero = variant === "hero";
+  const opensModal = Boolean(onOpen);
+  const hasTrials = demoHasTrials(demo);
+
+  function handleOpen() {
+    onOpen?.(demo);
+  }
 
   return (
-    <button
-      type="button"
+    <article
       id={`demo-${demo.id}`}
-      className={`${styles.card} ${isHero ? styles.hero : ""} ${highlighted ? styles.highlighted : ""}`}
+      className={`${styles.card} ${isHero ? styles.hero : ""} ${opensModal && isHero ? styles.heroCompact : ""} ${highlighted ? styles.highlighted : ""} ${opensModal ? styles.clickable : ""}`}
       style={{ "--type": TYPE_COLOR[demo.type] } as CSSProperties}
+      onClick={opensModal ? handleOpen : undefined}
+      onKeyDown={
+        opensModal
+          ? (e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                handleOpen();
+              }
+            }
+          : undefined
+      }
+      role={opensModal ? "button" : undefined}
+      tabIndex={opensModal ? 0 : undefined}
     >
-      <div className={isHero ? styles.heroBody : undefined}>
-        <div className={styles.tags}>
-          <span className={styles.type}>{demo.type}</span>
-          <span className={styles.op}>{demo.operationalType}</span>
+      <div className={styles.body}>
+        <div className={styles.head}>
+          <div className={styles.tags}>
+            <span className={styles.type}>{demoCategory(demo)}</span>
+            {hasTrials && <span className={styles.trial}>Trial Available</span>}
+          </div>
         </div>
-        <h4 className={styles.title}>{demo.title}</h4>
+        <h4 className={styles.title}>
+          <FavouriteStar kind="demo" id={demo.id} className={styles.favourite} />
+          <span className={styles.titleText}>{demo.title}</span>
+        </h4>
         <p className={styles.desc}>{demo.description}</p>
       </div>
-      <div className={styles.foot}>
-        <span className={styles.duration}>{demo.durationMins} min</span>
-        <span className={styles.go}>Open →</span>
+      <div className={`${styles.foot} ${opensModal ? styles.footCompact : ""}`}>
+        <div className={styles.footMeta}>
+          <span className={styles.updated}>
+            Published {formatPublishedDate(demoPublishedDate(demo))}
+          </span>
+        </div>
       </div>
-    </button>
+    </article>
   );
 }

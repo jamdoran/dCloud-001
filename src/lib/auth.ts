@@ -23,7 +23,7 @@ export interface User {
   name: string;
   email: string;
   /** Seller persona — drives how technical the surfaced content is. */
-  role: "Sales Engineer" | "Account Manager" | "Partner SE" | "Customer";
+  role: "Solutions Engineer" | "Account Manager" | "Partner SE" | "Customer";
   status: UserStatus;
   points: number;
 }
@@ -34,7 +34,7 @@ const STORAGE_KEY = "dcloud.user";
 const SIMULATED_USER: User = {
   name: "Jimmy Doran",
   email: "jimmy@the-dorans.com",
-  role: "Sales Engineer",
+  role: "Solutions Engineer",
   status: "Explorer",
   points: 0,
 };
@@ -42,7 +42,12 @@ const SIMULATED_USER: User = {
 export function getUser(): User | null {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    return raw ? (JSON.parse(raw) as User) : null;
+    if (!raw) return null;
+    const user = JSON.parse(raw) as User;
+    if ((user as { role: string }).role === "Sales Engineer") {
+      return { ...user, role: "Solutions Engineer" };
+    }
+    return user;
   } catch {
     return null;
   }

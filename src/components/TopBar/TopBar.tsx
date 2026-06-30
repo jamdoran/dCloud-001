@@ -11,7 +11,7 @@ import styles from "./TopBar.module.css";
  * Catalogs opens a modal for switching between content catalogs.
  */
 
-const PLACEHOLDER_NAV = ["Solutions", "My Spaces", "Scheduled", "History"];
+const PLACEHOLDER_NAV = ["Scheduled", "History"];
 
 export function TopBar() {
   const navigate = useNavigate();
@@ -27,6 +27,10 @@ export function TopBar() {
     .toUpperCase();
 
   const onHome = location.pathname === "/home";
+  const onNewDemos = location.pathname === "/new-demos";
+  const onHelp = location.pathname === "/help";
+  const onFavourites = location.pathname === "/favourites";
+  const onMetrics = location.pathname === "/metrics";
 
   useEffect(() => {
     function onKeyDown(e: KeyboardEvent) {
@@ -65,6 +69,30 @@ export function TopBar() {
           >
             Catalogs
           </button>
+          <Link
+            to="/new-demos"
+            className={`${styles.navItem} ${onNewDemos ? styles.active : ""}`}
+          >
+            New Demos
+          </Link>
+          <Link
+            to="/favourites"
+            className={`${styles.navItem} ${onFavourites ? styles.active : ""}`}
+          >
+            Favourites
+          </Link>
+          <Link
+            to="/help"
+            className={`${styles.navItem} ${onHelp ? styles.active : ""}`}
+          >
+            Help
+          </Link>
+          <Link
+            to="/metrics"
+            className={`${styles.navItem} ${onMetrics ? styles.active : ""}`}
+          >
+            Metrics
+          </Link>
           {PLACEHOLDER_NAV.map((item) => (
             <span key={item} className={styles.navItem}>
               {item}
@@ -73,9 +101,6 @@ export function TopBar() {
         </nav>
 
         <div className={styles.right}>
-          <button className={styles.iconBtn} aria-label="Favourites">
-            <StarIcon />
-          </button>
           <button className={styles.kbd} aria-label="Search" onClick={openSearch}>
             <SearchIcon />
             <span>⌘K</span>
@@ -93,19 +118,6 @@ export function TopBar() {
 
       {catalogOpen && <CatalogModal onClose={() => setCatalogOpen(false)} />}
     </>
-  );
-}
-
-function StarIcon() {
-  return (
-    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <path
-        d="M12 3.5l2.6 5.3 5.9.86-4.25 4.14 1 5.87L12 17.9l-5.25 2.77 1-5.87L3.5 9.66l5.9-.86L12 3.5z"
-        stroke="currentColor"
-        strokeWidth="1.6"
-        strokeLinejoin="round"
-      />
-    </svg>
   );
 }
 
