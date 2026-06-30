@@ -23,5 +23,5 @@ dist-ssr
 *.sln
 *.sw?
 
-# Large media assets (keep locally; use Git LFS or external hosting for deploy)
-public/videos/
+# Uncompressed video sources (keep locally only)
+public/videos/*.source.mp4
